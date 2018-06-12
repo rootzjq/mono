@@ -341,13 +341,11 @@ namespace System.Net.NetworkInformation {
 
 		public override IPv4InterfaceProperties GetIPv4Properties ()
 		{
-			Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
-			return new Win32IPv4InterfaceProperties (v4info, mib4);
+			return new Win32IPv4InterfaceProperties (addr, mib4);
 		}
 
 		public override IPv6InterfaceProperties GetIPv6Properties ()
 		{
-			Win32_IP_ADAPTER_ADDRESSES v6info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib6.Index);
 			return new Win32IPv6InterfaceProperties (mib6);
 		}
 
@@ -371,10 +369,9 @@ namespace System.Net.NetworkInformation {
 
 		public override IPAddressCollection DhcpServerAddresses {
 			get {
-				Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 				// FIXME: should ipv6 DhcpServer be considered?
 				try {
-					return new Win32IPAddressCollection (v4info.Dhcpv4Server.Sockaddr);
+					return new Win32IPAddressCollection (addr.Dhcpv4Server.Sockaddr);
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
@@ -393,11 +390,10 @@ namespace System.Net.NetworkInformation {
 			get {
 				var col = new GatewayIPAddressInformationCollection ();
 				try {
-					Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
 
-					if (v4info.FirstGatewayAddress != IntPtr.Zero) {
-						var a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS)Marshal.PtrToStructure(v4info.FirstGatewayAddress, typeof(Win32_IP_ADAPTER_GATEWAY_ADDRESS));
+					if (addr.FirstGatewayAddress != IntPtr.Zero) {
+						var a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS)Marshal.PtrToStructure(addr.FirstGatewayAddress, typeof(Win32_IP_ADAPTER_GATEWAY_ADDRESS));
 						col.InternalAdd(new SystemGatewayIPAddressInformation(a.Address.GetIPAddress()));
 						AddSubsequently (a.Next, col);
 					}
@@ -477,10 +473,9 @@ namespace System.Net.NetworkInformation {
 			get {
 				var col = new Win32IPAddressCollection();
 				try {
-					Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
-					if (v4info.FirstWinsServerAddress != IntPtr.Zero) {
-						var a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS)Marshal.PtrToStructure(v4info.FirstWinsServerAddress, typeof(Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
+					if (addr.FirstWinsServerAddress != IntPtr.Zero) {
+						var a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS)Marshal.PtrToStructure(addr.FirstWinsServerAddress, typeof(Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
 						col.InternalAdd(a.Address.GetIPAddress());
 						AddSubsequently (a.Next, col);
 					}
