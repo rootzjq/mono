@@ -102,8 +102,6 @@ namespace System.Net.NetworkInformation
 
 	[StructLayout (LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 	struct Win32_IP_ADAPTER_ADDRESSES {
-		const int MAX_DHCPV6_DUID_LENGTH = 130;
-
 		public AlignmentUnion Alignment;
 		public IntPtr Next; // to Win32_IP_ADAPTER_ADDRESSES
 		[MarshalAs (UnmanagedType.LPStr)]
@@ -130,25 +128,26 @@ namespace System.Net.NetworkInformation
 		public UInt64 ReceiveLinkSpeed;
 		public IntPtr FirstWinsServerAddress; // to PIP_ADAPTER_WINS_SERVER_ADDRESS_LH
 		public IntPtr FirstGatewayAddress; // to PIP_ADAPTER_GATEWAY_ADDRESS_LH
-        public ulong Ipv4Metric;
-        public ulong Ipv6Metric;
-  		public UInt64 Luid;
-        public Win32_SOCKET_ADDRESS Dhcpv4Server;
-        public uint CompartmentId;
-  		public Guid NetworkGuid;
-        public int ConnectionType;
-  		public int TunnelType;
-  		public Win32_SOCKET_ADDRESS Dhcpv6Server;
-  		[MarshalAs (UnmanagedType.ByValArray, SizeConst = MAX_DHCPV6_DUID_LENGTH)]
-        public byte [] Dhcpv6ClientDuid;
-  		public ulong Dhcpv6ClientDuidLength;
-        public ulong Dhcpv6Iaid;
-        public IntPtr FirstDnsSuffix; // to PIP_ADAPTER_DNS_SUFFIX
+		public ulong Ipv4Metric;
+		public ulong Ipv6Metric;
+		public UInt64 Luid;
+		public Win32_SOCKET_ADDRESS Dhcpv4Server;
+		public uint CompartmentId;
+		public Guid NetworkGuid;
+		public int ConnectionType;
+		public int TunnelType;
+		public Win32_SOCKET_ADDRESS Dhcpv6Server;
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = MAX_DHCPV6_DUID_LENGTH)]
+		public byte [] Dhcpv6ClientDuid;
+		public ulong Dhcpv6ClientDuidLength;
+		public ulong Dhcpv6Iaid;
+		public IntPtr FirstDnsSuffix; // to PIP_ADAPTER_DNS_SUFFIX
 
 		// Note that Vista-only members and XP-SP1-only member are
 		// omitted.
 
 		const int MAX_ADAPTER_ADDRESS_LENGTH = 8;
+		const int MAX_DHCPV6_DUID_LENGTH = 130;
 
 		const int IP_ADAPTER_DDNS_ENABLED = 1;
 		const int IP_ADAPTER_DHCP_ENABLED = 4;
