@@ -832,14 +832,6 @@ namespace System.Net.NetworkInformation {
 		[DllImport ("iphlpapi.dll", SetLastError = true)]
 		static extern int GetIfEntry (ref Win32_MIB_IFROW row);
 
-		public static Win32_IP_ADAPTER_ADDRESSES GetAdapterInfoByIndex (int index)
-		{
-			foreach (Win32_IP_ADAPTER_ADDRESSES addr in GetAdaptersAddresses ())
-				if (addr.Alignment.IfIndex == index)
-					return addr;
-			throw new IndexOutOfRangeException ("No adapter found for index " + index);
-		}
-
 		static Win32_IP_ADAPTER_ADDRESSES [] GetAdaptersAddresses ()
 		{
 			IntPtr ptr = IntPtr.Zero;

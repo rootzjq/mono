@@ -449,7 +449,6 @@ namespace System.Net.NetworkInformation {
 		public override UnicastIPAddressInformationCollection UnicastAddresses {
 			get {
 				try {
-					Win32_IP_ADAPTER_ADDRESSES ai = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
 					return Win32FromUnicast (addr.FirstUnicastAddress);
 				} catch (IndexOutOfRangeException) {
