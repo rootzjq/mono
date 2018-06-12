@@ -408,10 +408,19 @@ namespace System.Net.NetworkInformation {
 
 		static void AddSubsequently (IntPtr head, GatewayIPAddressInformationCollection col)
 		{
-			Win32_IP_ADDR_STRING a;
+			Win32_IP_ADAPTER_GATEWAY_ADDRESS a;
 			for (IntPtr p = head; p != IntPtr.Zero; p = a.Next) {
-				a = (Win32_IP_ADDR_STRING) Marshal.PtrToStructure (p, typeof (Win32_IP_ADDR_STRING));
-				col.InternalAdd (new SystemGatewayIPAddressInformation (IPAddress.Parse (a.IpAddress)));
+				a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_GATEWAY_ADDRESS));
+				col.InternalAdd (new SystemGatewayIPAddressInformation (a.Address.GetIPAddress()));
+			}
+		}
+
+		static void AddSubsequently (IntPtr head, Win32IPAddressCollection col)
+		{
+			Win32_IP_ADAPTER_WINS_SERVER_ADDRESS a;
+			for (IntPtr p = head; p != IntPtr.Zero; p = a.Next) {
+				a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
+				col.InternalAdd (a.Address.GetIPAddress());
 			}
 		}
 
@@ -466,15 +475,19 @@ namespace System.Net.NetworkInformation {
 
 		public override IPAddressCollection WinsServersAddresses {
 			get {
+				var col = new Win32IPAddressCollection();
 				try {
-					//Fixme mike
-					return Win32IPAddressCollection.Empty;
-					/*Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+					Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
-					return new Win32IPAddressCollection (v4info.PrimaryWinsServer, v4info.SecondaryWinsServer);*/
+					if (v4info.FirstWinsServerAddress != IntPtr.Zero) {
+						var a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS)Marshal.PtrToStructure(v4info.FirstWinsServerAddress, typeof(Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
+						col.InternalAdd(a.Address.GetIPAddress());
+						AddSubsequently (a.Next, col);
+					}
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
+				return col;
 			}
 		}
 

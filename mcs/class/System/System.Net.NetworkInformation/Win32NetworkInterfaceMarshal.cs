@@ -303,6 +303,14 @@ namespace System.Net.NetworkInformation
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
+	struct Win32_IP_ADAPTER_WINS_SERVER_ADDRESS
+	{
+		public Win32LengthFlagsUnion LengthFlags;
+		public IntPtr Next; // to Win32_IP_ADAPTER_WINS_SERVER_ADDRESS
+		public Win32_SOCKET_ADDRESS Address;
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
 	struct Win32_IP_ADAPTER_UNICAST_ADDRESS
 	{
 		public Win32LengthFlagsUnion LengthFlags;

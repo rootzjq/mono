@@ -40,7 +40,7 @@ namespace System.Net.NetworkInformation {
 		public static readonly Win32IPAddressCollection Empty = new Win32IPAddressCollection (IntPtr.Zero);
 
 		// for static methods
-		Win32IPAddressCollection ()
+		public Win32IPAddressCollection ()
 		{
 		}
 
