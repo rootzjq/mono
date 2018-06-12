@@ -341,13 +341,13 @@ namespace System.Net.NetworkInformation {
 
 		public override IPv4InterfaceProperties GetIPv4Properties ()
 		{
-			Win32_IP_ADAPTER_INFO v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+			Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 			return new Win32IPv4InterfaceProperties (v4info, mib4);
 		}
 
 		public override IPv6InterfaceProperties GetIPv6Properties ()
 		{
-			Win32_IP_ADAPTER_INFO v6info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib6.Index);
+			Win32_IP_ADAPTER_ADDRESSES v6info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib6.Index);
 			return new Win32IPv6InterfaceProperties (mib6);
 		}
 
@@ -371,10 +371,10 @@ namespace System.Net.NetworkInformation {
 
 		public override IPAddressCollection DhcpServerAddresses {
 			get {
-				Win32_IP_ADAPTER_INFO v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+				Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 				// FIXME: should ipv6 DhcpServer be considered?
 				try {
-					return new Win32IPAddressCollection (v4info.DhcpServer);
+					return new Win32IPAddressCollection (v4info.Dhcpv4Server.Sockaddr);
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
@@ -393,12 +393,12 @@ namespace System.Net.NetworkInformation {
 			get {
 				var col = new GatewayIPAddressInformationCollection ();
 				try {
-					Win32_IP_ADAPTER_INFO v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+					Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
 
-					var a = v4info.GatewayList;
-					if (!String.IsNullOrEmpty (a.IpAddress)) {
-						col.InternalAdd(new SystemGatewayIPAddressInformation(IPAddress.Parse (a.IpAddress)));
+					if (v4info.FirstGatewayAddress != IntPtr.Zero) {
+						var a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS)Marshal.PtrToStructure(v4info.FirstGatewayAddress, typeof(Win32_IP_ADAPTER_GATEWAY_ADDRESS));
+						col.InternalAdd(new SystemGatewayIPAddressInformation(a.Address.GetIPAddress()));
 						AddSubsequently (a.Next, col);
 					}
 				} catch (IndexOutOfRangeException) {}
@@ -444,7 +444,7 @@ namespace System.Net.NetworkInformation {
 		public override UnicastIPAddressInformationCollection UnicastAddresses {
 			get {
 				try {
-					Win32_IP_ADAPTER_INFO ai = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+					Win32_IP_ADAPTER_ADDRESSES ai = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
 					return Win32FromUnicast (addr.FirstUnicastAddress);
 				} catch (IndexOutOfRangeException) {
@@ -467,9 +467,11 @@ namespace System.Net.NetworkInformation {
 		public override IPAddressCollection WinsServersAddresses {
 			get {
 				try {
-					Win32_IP_ADAPTER_INFO v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
+					//Fixme mike
+					return Win32IPAddressCollection.Empty;
+					/*Win32_IP_ADAPTER_ADDRESSES v4info = Win32NetworkInterface2.GetAdapterInfoByIndex (mib4.Index);
 					// FIXME: should ipv6 DhcpServer be considered?
-					return new Win32IPAddressCollection (v4info.PrimaryWinsServer, v4info.SecondaryWinsServer);
+					return new Win32IPAddressCollection (v4info.PrimaryWinsServer, v4info.SecondaryWinsServer);*/
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
