@@ -827,30 +827,7 @@ namespace System.Net.NetworkInformation {
 		static extern int GetAdaptersInfo (IntPtr info, ref int size);
 
 		[DllImport ("iphlpapi.dll", SetLastError = true)]
-		static extern int GetAdaptersAddresses (uint family, uint flags, IntPtr reserved, IntPtr info, ref int size);
-
-		[DllImport ("iphlpapi.dll", SetLastError = true)]
 		static extern int GetIfEntry (ref Win32_MIB_IFROW row);
-
-		static Win32_IP_ADAPTER_ADDRESSES [] GetAdaptersAddresses ()
-		{
-			IntPtr ptr = IntPtr.Zero;
-			int len = 0;
-			GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
-			ptr = Marshal.AllocHGlobal(len);
-			int ret = GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
-			if (ret != 0)
-				throw new NetworkInformationException (ret);
-
-			List<Win32_IP_ADAPTER_ADDRESSES> l = new List<Win32_IP_ADAPTER_ADDRESSES> ();
-			Win32_IP_ADAPTER_ADDRESSES info;
-			for (IntPtr p = ptr; p != IntPtr.Zero; p = info.Next) {
-				info = Marshal.PtrToStructure<Win32_IP_ADAPTER_ADDRESSES> (p);
-				l.Add (info);
-			}
-
-			return l.ToArray ();
-		}
 
 		static Win32_IP_ADAPTER_INFO [] GetAdaptersInfo ()
 		{
