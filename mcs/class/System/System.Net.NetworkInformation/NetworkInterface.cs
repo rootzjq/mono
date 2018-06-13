@@ -466,6 +466,9 @@ namespace System.Net.NetworkInformation {
 				IntPtr ptr = IntPtr.Zero;
 				int len = 0;
 				GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
+				if (Marshal.SizeOf(typeof(Win32_IP_ADAPTER_ADDRESSES)) > len)
+					throw new NetworkInformationException();
+
 				ptr = Marshal.AllocHGlobal(len);
 				int ret = GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
 				if (ret != 0)
