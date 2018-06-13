@@ -465,7 +465,7 @@ namespace System.Net.NetworkInformation {
 			{
 				IntPtr ptr = IntPtr.Zero;
 				int len = 0;
-				uint flags = 0x0010 | 0x0080 | 0x0040;
+				uint flags = Win32_IP_ADAPTER_ADDRESSES.GAA_FLAG_INCLUDE_WINS_INFO | Win32_IP_ADAPTER_ADDRESSES.GAA_FLAG_INCLUDE_GATEWAYS;
 				GetAdaptersAddresses (0, flags, IntPtr.Zero, ptr, ref len);
 				if (Marshal.SizeOf(typeof(Win32_IP_ADAPTER_ADDRESSES)) > len)
 					throw new NetworkInformationException();

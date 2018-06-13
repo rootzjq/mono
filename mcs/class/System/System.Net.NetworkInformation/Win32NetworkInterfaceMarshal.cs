@@ -143,8 +143,9 @@ namespace System.Net.NetworkInformation
 		public ulong Dhcpv6Iaid;
 		public IntPtr FirstDnsSuffix; // to PIP_ADAPTER_DNS_SUFFIX
 
-		// Note that Vista-only members and XP-SP1-only member are
-		// omitted.
+		//Flags For GetAdapterAddresses
+		public const int GAA_FLAG_INCLUDE_WINS_INFO = 0x0040;
+		public const int GAA_FLAG_INCLUDE_GATEWAYS = 0x0080;
 
 		const int MAX_ADAPTER_ADDRESS_LENGTH = 8;
 		const int MAX_DHCPV6_DUID_LENGTH = 130;
@@ -153,7 +154,6 @@ namespace System.Net.NetworkInformation
 		const int IP_ADAPTER_DHCP_ENABLED = 4;
 		const int IP_ADAPTER_RECEIVE_ONLY = 8;
 		const int IP_ADAPTER_NO_MULTICAST = 0x10;
-
 
 		public bool DdnsEnabled {
 			get { return (Flags & IP_ADAPTER_DDNS_ENABLED) != 0; }
