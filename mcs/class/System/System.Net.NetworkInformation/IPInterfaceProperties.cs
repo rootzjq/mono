@@ -391,23 +391,13 @@ namespace System.Net.NetworkInformation {
 				var col = new GatewayIPAddressInformationCollection ();
 				try {
 					// FIXME: should ipv6 DhcpServer be considered?
-
-					if (addr.FirstGatewayAddress != IntPtr.Zero) {
-						var a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS)Marshal.PtrToStructure(addr.FirstGatewayAddress, typeof(Win32_IP_ADAPTER_GATEWAY_ADDRESS));
-						col.InternalAdd(new SystemGatewayIPAddressInformation(a.Address.GetIPAddress()));
-						AddSubsequently (a.Next, col);
+					Win32_IP_ADAPTER_GATEWAY_ADDRESS a;
+					for (IntPtr p = addr.FirstGatewayAddress; p != IntPtr.Zero; p = a.Next) {
+						a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_GATEWAY_ADDRESS));
+						col.InternalAdd (new SystemGatewayIPAddressInformation (a.Address.GetIPAddress()));
 					}
 				} catch (IndexOutOfRangeException) {}
 				return col;
-			}
-		}
-
-		static void AddSubsequently (IntPtr head, GatewayIPAddressInformationCollection col)
-		{
-			Win32_IP_ADAPTER_GATEWAY_ADDRESS a;
-			for (IntPtr p = head; p != IntPtr.Zero; p = a.Next) {
-				a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_GATEWAY_ADDRESS));
-				col.InternalAdd (new SystemGatewayIPAddressInformation (a.Address.GetIPAddress()));
 			}
 		}
 
