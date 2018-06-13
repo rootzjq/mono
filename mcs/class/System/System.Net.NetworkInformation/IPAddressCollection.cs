@@ -84,6 +84,13 @@ namespace System.Net.NetworkInformation {
 			return c;
 		}
 
+		public static Win32IPAddressCollection FromSocketAddress(Win32_SOCKET_ADDRESS addr)
+		{
+			Win32IPAddressCollection c = new Win32IPAddressCollection ();
+			c.InternalAdd(addr.GetIPAddress ());
+			return c;
+		}
+
 		void AddSubsequentlyString (IntPtr head)
 		{
 			Win32_IP_ADDR_STRING a;

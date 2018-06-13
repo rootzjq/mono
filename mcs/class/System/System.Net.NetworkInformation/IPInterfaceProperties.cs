@@ -371,10 +371,12 @@ namespace System.Net.NetworkInformation {
 			get {
 				// FIXME: should ipv6 DhcpServer be considered?
 				try {
-					return new Win32IPAddressCollection (addr.Dhcpv4Server.Sockaddr);
+					if (addr.DhcpEnabled)
+						return Win32IPAddressCollection.FromSocketAddress (addr.Dhcpv4Server);
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
+				return Win32IPAddressCollection.Empty;
 			}
 		}
 

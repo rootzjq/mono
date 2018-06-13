@@ -121,19 +121,19 @@ namespace System.Net.NetworkInformation
 		public NetworkInterfaceType IfType;
 		public OperationalStatus OperStatus;
 		public int Ipv6IfIndex;
-		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 16 * 4)]
+		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 16)]
 		public uint [] ZoneIndices;
 		public IntPtr FirstPrefix; // to PIP_ADAPTER_PREFIX
 		public UInt64 TransmitLinkSpeed;
 		public UInt64 ReceiveLinkSpeed;
 		public IntPtr FirstWinsServerAddress; // to PIP_ADAPTER_WINS_SERVER_ADDRESS_LH
 		public IntPtr FirstGatewayAddress; // to PIP_ADAPTER_GATEWAY_ADDRESS_LH
-		public ulong Ipv4Metric;
-		public ulong Ipv6Metric;
+		public uint Ipv4Metric;
+		public uint Ipv6Metric;
 		public UInt64 Luid;
 		public Win32_SOCKET_ADDRESS Dhcpv4Server;
 		public uint CompartmentId;
-		public Guid NetworkGuid;
+		public UInt64 NetworkGuid;
 		public int ConnectionType;
 		public int TunnelType;
 		public Win32_SOCKET_ADDRESS Dhcpv6Server;

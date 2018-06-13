@@ -465,12 +465,13 @@ namespace System.Net.NetworkInformation {
 			{
 				IntPtr ptr = IntPtr.Zero;
 				int len = 0;
-				GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
+				uint flags = 0x0010 | 0x0080 | 0x0040;
+				GetAdaptersAddresses (0, flags, IntPtr.Zero, ptr, ref len);
 				if (Marshal.SizeOf(typeof(Win32_IP_ADAPTER_ADDRESSES)) > len)
 					throw new NetworkInformationException();
 
 				ptr = Marshal.AllocHGlobal(len);
-				int ret = GetAdaptersAddresses (0, 0, IntPtr.Zero, ptr, ref len);
+				int ret = GetAdaptersAddresses (0, flags, IntPtr.Zero, ptr, ref len);
 				if (ret != 0)
 					throw new NetworkInformationException (ret);
 
