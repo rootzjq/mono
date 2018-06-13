@@ -413,15 +413,6 @@ namespace System.Net.NetworkInformation {
 			}
 		}
 
-		static void AddSubsequently (IntPtr head, Win32IPAddressCollection col)
-		{
-			Win32_IP_ADAPTER_WINS_SERVER_ADDRESS a;
-			for (IntPtr p = head; p != IntPtr.Zero; p = a.Next) {
-				a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
-				col.InternalAdd (a.Address.GetIPAddress());
-			}
-		}
-
 		public override bool IsDnsEnabled {
 			get { return Win32NetworkInterface.FixedInfo.EnableDns != 0; }
 		}
@@ -472,18 +463,11 @@ namespace System.Net.NetworkInformation {
 
 		public override IPAddressCollection WinsServersAddresses {
 			get {
-				var col = new Win32IPAddressCollection();
 				try {
-					// FIXME: should ipv6 DhcpServer be considered?
-					if (addr.FirstWinsServerAddress != IntPtr.Zero) {
-						var a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS)Marshal.PtrToStructure(addr.FirstWinsServerAddress, typeof(Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
-						col.InternalAdd(a.Address.GetIPAddress());
-						AddSubsequently (a.Next, col);
-					}
+					return Win32IPAddressCollection.FromWinsServer(addr.FirstWinsServerAddress);
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
-				return col;
 			}
 		}
 

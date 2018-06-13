@@ -40,7 +40,7 @@ namespace System.Net.NetworkInformation {
 		public static readonly Win32IPAddressCollection Empty = new Win32IPAddressCollection (IntPtr.Zero);
 
 		// for static methods
-		public Win32IPAddressCollection ()
+		Win32IPAddressCollection ()
 		{
 		}
 
@@ -84,10 +84,22 @@ namespace System.Net.NetworkInformation {
 			return c;
 		}
 
-		public static Win32IPAddressCollection FromSocketAddress(Win32_SOCKET_ADDRESS addr)
+		public static Win32IPAddressCollection FromSocketAddress (Win32_SOCKET_ADDRESS addr)
 		{
 			Win32IPAddressCollection c = new Win32IPAddressCollection ();
-			c.InternalAdd(addr.GetIPAddress ());
+			if(addr.Sockaddr != IntPtr.Zero)
+				c.InternalAdd(addr.GetIPAddress ());
+			return c;
+		}
+
+		public static Win32IPAddressCollection FromWinsServer (IntPtr ptr)
+		{
+			Win32IPAddressCollection c = new Win32IPAddressCollection ();
+			Win32_IP_ADAPTER_WINS_SERVER_ADDRESS a;
+			for (IntPtr p = ptr; p != IntPtr.Zero; p = a.Next) {
+				a = (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_WINS_SERVER_ADDRESS));
+				c.InternalAdd (a.Address.GetIPAddress ());
+			}
 			return c;
 		}
 
