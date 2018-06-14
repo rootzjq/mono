@@ -87,8 +87,8 @@ namespace System.Net.NetworkInformation {
 		public static Win32IPAddressCollection FromSocketAddress (Win32_SOCKET_ADDRESS addr)
 		{
 			Win32IPAddressCollection c = new Win32IPAddressCollection ();
-			if(addr.Sockaddr != IntPtr.Zero)
-				c.InternalAdd(addr.GetIPAddress ());
+			if (addr.Sockaddr != IntPtr.Zero)
+				c.InternalAdd (addr.GetIPAddress ());
 			return c;
 		}
 

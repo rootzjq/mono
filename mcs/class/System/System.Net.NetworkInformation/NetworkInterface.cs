@@ -467,8 +467,8 @@ namespace System.Net.NetworkInformation {
 				int len = 0;
 				uint flags = Win32_IP_ADAPTER_ADDRESSES.GAA_FLAG_INCLUDE_WINS_INFO | Win32_IP_ADAPTER_ADDRESSES.GAA_FLAG_INCLUDE_GATEWAYS;
 				GetAdaptersAddresses (0, flags, IntPtr.Zero, ptr, ref len);
-				if (Marshal.SizeOf(typeof(Win32_IP_ADAPTER_ADDRESSES)) > len)
-					throw new NetworkInformationException();
+				if (Marshal.SizeOf (typeof (Win32_IP_ADAPTER_ADDRESSES)) > len)
+					throw new NetworkInformationException ();
 
 				ptr = Marshal.AllocHGlobal(len);
 				int ret = GetAdaptersAddresses (0, flags, IntPtr.Zero, ptr, ref len);

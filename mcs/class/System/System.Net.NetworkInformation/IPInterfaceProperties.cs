@@ -394,7 +394,7 @@ namespace System.Net.NetworkInformation {
 					Win32_IP_ADAPTER_GATEWAY_ADDRESS a;
 					for (IntPtr p = addr.FirstGatewayAddress; p != IntPtr.Zero; p = a.Next) {
 						a = (Win32_IP_ADAPTER_GATEWAY_ADDRESS) Marshal.PtrToStructure (p, typeof (Win32_IP_ADAPTER_GATEWAY_ADDRESS));
-						col.InternalAdd (new SystemGatewayIPAddressInformation (a.Address.GetIPAddress()));
+						col.InternalAdd (new SystemGatewayIPAddressInformation (a.Address.GetIPAddress ()));
 					}
 				} catch (IndexOutOfRangeException) {}
 				return col;
@@ -452,7 +452,7 @@ namespace System.Net.NetworkInformation {
 		public override IPAddressCollection WinsServersAddresses {
 			get {
 				try {
-					return Win32IPAddressCollection.FromWinsServer(addr.FirstWinsServerAddress);
+					return Win32IPAddressCollection.FromWinsServer (addr.FirstWinsServerAddress);
 				} catch (IndexOutOfRangeException) {
 					return Win32IPAddressCollection.Empty;
 				}
